@@ -1,39 +1,36 @@
-"""This program will take the IP SET ID, generate a Change token nad update and ipset"""
-
-"""Update dict is in the format
-[
-        {
-            'Action': 'INSERT'|'DELETE',
-            'IPSetDescriptor': {
-                'Type': 'IPV4'|'IPV6',
-                'Value': 'string'
-            }
-        },
-    ]
-
-"""
-
 import boto3
 
-#IP SET ID
-ip_set_id= '9149cc4c-a527-47f4-8c29-b86730edc925'
+client = boto3.client('wafv2')
 
-client = boto3.client('waf-regional')
-response = client.get_change_token()
-change_token = response['ChangeToken']
+ipvalues=[]
 
-
-updates_dict = [
-        {
-            'Action': 'INSERT',
-            'IPSetDescriptor': {
-                'Type': 'IPV4',
-                'Value': '192.168.2.5/32'
-            }
-        },
-    ]
-ip_set_update = client.update_ip_set(
-    IPSetId = ip_set_id,
-    ChangeToken=change_token,
-    Updates=updates_dict
+getipset = client.get_ip_set(
+    Name='Test',
+    Scope='REGIONAL',
+    Id='e35fbeff-b614-47ed-b5e4-9b2c1bc7ee4d'
 )
+
+oldip=getipset['IPSet']['Addresses']
+locktoken=(getipset["LockToken"])
+
+print(getipset["LockToken"])
+print(oldip)
+
+for oip in oldip:
+        oip = oip.rstrip()
+        ipvalues.append(oip)
+
+with open('ip-test.txt') as ip:
+  string = ip.readlines()
+
+for line in string:
+        line = line.rstrip()
+        ipvalues.append(line)
+
+response = client.update_ip_set(
+Name='Test',
+Scope='REGIONAL',
+Id='e35fbeff-b614-47ed-b5e4-9b2c1bc7ee4d',
+Description='test',
+Addresses=ipvalues,
+LockToken=locktoken

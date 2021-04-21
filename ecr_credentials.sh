@@ -4,8 +4,8 @@ mkdir -p ~/.aws
 
 cat > ~/.aws/credentials << EOL
 [default]
-aws_access_key_id=AKIAQBHSRDAZ6MZFOXNJ
-aws_secret_access_key=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
+aws_access_key_id=AKIAQBHSRDAZ2OZG6ENE
+aws_secret_access_key=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
 EOL
 
 cat > ~/.aws/config << EOL
@@ -13,4 +13,3 @@ cat > ~/.aws/config << EOL
 region=us-east-1
 output=json
 EOL
-
