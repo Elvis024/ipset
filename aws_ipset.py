@@ -10,7 +10,7 @@ client = boto3.client('wafv2')
 #get the ipset
 response = client.get_ip_set(
     Name=ip_set_name,
-    Scope='CLOUDFRONT',
+    Scope='REGIONAL',
     Id=ip_set_id
 )
 
@@ -31,7 +31,7 @@ local_ips=list(set(local_ips))
 
 response = client.update_ip_set(
     Name=ip_set_name,
-    Scope='CLOUDFRONT',
+    Scope='REGIONAL',
     Id=ip_set_id,
     Addresses=local_ips,
     LockToken=LockToken
