@@ -2,7 +2,7 @@ import boto3
 
 #IP SET ID
 ip_set_name= 'Two'
-ip_set_id= '5f483867-819b-4d7f-b112-5649b7cd0998'
+ip_set_id= '827aef16-3c69-4139-81f1-d3bdaa7f52ab'
 
 client = boto3.client('wafv2')
 
