@@ -1,36 +1,38 @@
 import boto3
 
+#IP SET ID
+ip_set_name= 'Two'
+ip_set_id= '5f483867-819b-4d7f-b112-5649b7cd0998'
+
 client = boto3.client('wafv2')
 
-ipvalues=[]
 
-getipset = client.get_ip_set(
-    Name='Test',
-    Scope='REGIONAL',
-    Id='e35fbeff-b614-47ed-b5e4-9b2c1bc7ee4d'
+#get the ipset
+response = client.get_ip_set(
+    Name=ip_set_name,
+    Scope='CLOUDFRONT',
+    Id=ip_set_id
 )
 
-oldip=getipset['IPSet']['Addresses']
-locktoken=(getipset["LockToken"])
+addresses=response['IPSet']['Addresses']
+LockToken=response['LockToken']
 
-print(getipset["LockToken"])
-print(oldip)
+print(addresses)
 
-for oip in oldip:
-        oip = oip.rstrip()
-        ipvalues.append(oip)
+local_ips=[]
 
-with open('ip-test.txt') as ip:
-  string = ip.readlines()
+with open('iplist.txt') as fp:
+    c=fp.readlines()
+    local_ips=[i.rstrip('\n') for i in c]
 
-for line in string:
-        line = line.rstrip()
-        ipvalues.append(line)
+print(local_ips)
+local_ips=addresses + local_ips
+local_ips=list(set(local_ips))
 
 response = client.update_ip_set(
-Name='Test',
-Scope='REGIONAL',
-Id='e35fbeff-b614-47ed-b5e4-9b2c1bc7ee4d',
-Description='test',
-Addresses=ipvalues,
-LockToken=locktoken
+    Name=ip_set_name,
+    Scope='CLOUDFRONT',
+    Id=ip_set_id,
+    Addresses=local_ips,
+    LockToken=LockToken
+)
