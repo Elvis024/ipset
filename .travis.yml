@@ -11,13 +11,3 @@ before_install:
 
 script:
     - python ./aws_ipset.py
-  # after_success:
-
-deploy:
-  provider: wafv2
-  region: us-east-1
-  access_key_id: AKIAQBHSRDAZUQWGM7WA
-  secret_access_key: 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
-  app: Test
-  on:
-    all_branches: true
