@@ -33,7 +33,7 @@ for single_ip in IP_LIST:
             local_ips=[i.rstrip('\n') for i in c]
     response = client.get_ip_set(
         Name=ip_set_name,
-        Scope='CLOUDFRONT',
+        Scope='REGIONAL',
         Id=ip_set_id
     )
 
@@ -45,7 +45,7 @@ for single_ip in IP_LIST:
 
     response = client.update_ip_set(
         Name=ip_set_name,
-        Scope='CLOUDFRONT',
+        Scope='REGIONAL',
         Id=ip_set_id,
         Addresses=local_ips,
         LockToken=LockToken
