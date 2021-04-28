@@ -1,6 +1,7 @@
 import boto3
 
 
+
 IP_LIST = [
     {'ip_set_name':'Two','ip_set_id':'827aef16-3c69-4139-81f1-d3bdaa7f52ab','text_file':'iplist.txt'},
     {'ip_set_name':'Test','ip_set_id':'e35fbeff-b614-47ed-b5e4-9b2c1bc7ee4d','text_file':'two.txt'}
