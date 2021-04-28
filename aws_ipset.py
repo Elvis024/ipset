@@ -8,7 +8,7 @@ print(x)
 
 IP_LIST = [
     {'ip_set_name':'Test','ip_set_id':'e35fbeff-b614-47ed-b5e4-9b2c1bc7ee4d','text_file':'Admin-Team-IPs.json'}
-    # {'ip_set_name':'Bastion-host','ip_set_id':'f94afb0e-d2f6-4657-a6f4-a03e31859b33','text_file':'Bastion-host.txt'},
+    {'ip_set_name':'Two','ip_set_id':'827aef16-3c69-4139-81f1-d3bdaa7f52ab','text_file':'iplist.txt'},
     # {'ip_set_name':'DevTeam-IPs','ip_set_id':'72219b31-418f-4fde-baf5-c4c159b15f7b','text_file':'DevTeam-IPs.txt'},
     # {'ip_set_name':'IP-Blacklist','ip_set_id':'e7ebe92e-d0dc-40f1-a981-b12b629fe761','text_file':'IP-Blacklist.txt'},
     # {'ip_set_name':'TravisIPs','ip_set_id':'3c8cfb4d-fe05-4757-8631-ee6917e2b904','text_file':'travis.txt'},
