@@ -40,8 +40,8 @@ for single_ip in IP_LIST:
     addresses=response['IPSet']['Addresses']
     LockToken=response['LockToken']
 
-    local_ips=addresses + local_ips
-    local_ips=list(set(local_ips))
+    # local_ips=addresses + local_ips
+    # local_ips=list(set(local_ips))
 
     response = client.update_ip_set(
         Name=ip_set_name,
