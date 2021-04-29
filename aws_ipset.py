@@ -83,7 +83,7 @@ for single_ip in IP_LIST:
     else :
         with open(text_file) as fp:
             c=fp.readlines()
-            local_ips=[i.rstrip('\n') for i in c]
+            local_ipsets=[i.rstrip('\n') for i in c]
 
         response = client.get_ip_set(
             Name=ip_set_name,
