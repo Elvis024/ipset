@@ -2,6 +2,7 @@ import boto3
 import json
 
 local_ips=[]
+local_file=[]
 x=[]
 
 print(x)
@@ -22,39 +23,79 @@ for single_ip in IP_LIST:
     ip_set_id = single_ip['ip_set_id']
     text_file = single_ip['text_file']
     if text_file == 'Admin-Team-IPs.json':
-        with open('Admin-Team-IPs.json') as f:
+        with open(text_file) as f:
             data = json.loads(f.read())
         for key,value in data.items():
             local_ips.append(value)
+        response = client.get_ip_set(
+            Name=ip_set_name,
+            Scope="REGIONAL",
+            Id=ip_set_id
+        )
+        addresses=response['IPSet']['Addresses']
+        LockToken=response['LockToken']
+
+        response = client.update_ip_set(
+            Name=ip_set_name,
+            Scope='REGIONAL',
+            Id=ip_set_id,
+            Addresses=local_ips,
+            LockToken=LockToken
+        )
+        completed_text = "IP_SET: {} updated from {}".format(ip_set_name,text_file)
+        print(completed_text)
 
     elif text_file == 'file.json':
-        with open('file.json') as f:
+        with open('text_file') as f:
             data = json.loads(f.read())
         for key,value in data.items():
-            local_ips.append(value)
+            local_file.append(value)
+
+        response = client.get_ip_set(
+            Name=ip_set_name,
+            Scope='REGIONAL',
+            Id=ip_set_id
+        )
+
+        addresses=response['IPSet']['Addresses']
+        LockToken=response['LockToken']
+
+        # local_ips=addresses + local_ips
+        # local_ips=list(set(local_ips))
+
+        response = client.update_ip_set(
+            Name=ip_set_name,
+            Scope='REGIONAL',
+            Id=ip_set_id,
+            Addresses=local_file,
+            LockToken=LockToken
+        )
+        completed_text = "IP_SET: {} updated from {}".format(ip_set_name,text_file)
+        print(completed_text)
+
     #get the ipset
-    elif text_file != 'Admin-Team-IPs.json' != 'file.json':
+    elif text_file == 'iplist.txt':
         with open(text_file) as fp:
             c=fp.readlines()
-            local_ips=[i.rstrip('\n') for i in c]
-    response = client.get_ip_set(
-        Name=ip_set_name,
-        Scope='REGIONAL',
-        Id=ip_set_id
-    )
+            local_text=[i.rstrip('\n') for i in c]
+        response = client.get_ip_set(
+            Name=ip_set_name,
+            Scope='REGIONAL',
+            Id=ip_set_id
+        )
 
-    addresses=response['IPSet']['Addresses']
-    LockToken=response['LockToken']
+        addresses=response['IPSet']['Addresses']
+        LockToken=response['LockToken']
 
-    # local_ips=addresses + local_ips
-    # local_ips=list(set(local_ips))
+        # local_ips=addresses + local_ips
+        # local_ips=list(set(local_ips))
 
-    response = client.update_ip_set(
-        Name=ip_set_name,
-        Scope='REGIONAL',
-        Id=ip_set_id,
-        Addresses=local_ips,
-        LockToken=LockToken
-    )
-    completed_text = "IP_SET: {} updated from {}".format(ip_set_name,text_file)
-    print(completed_text)
+        response = client.update_ip_set(
+            Name=ip_set_name,
+            Scope='REGIONAL',
+            Id=ip_set_id,
+            Addresses=local_text,
+            LockToken=LockToken
+        )
+        completed_text = "IP_SET: {} updated from {}".format(ip_set_name,text_file)
+        print(completed_text)
