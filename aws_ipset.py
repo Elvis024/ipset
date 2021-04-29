@@ -37,24 +37,24 @@ for single_ip in IP_LIST:
         with open(text_file) as fp:
             c=fp.readlines()
             local_ips=[i.rstrip('\n') for i in c]
-    response = client.get_ip_set(
-        Name=ip_set_name,
-        Scope='REGIONAL',
-        Id=ip_set_id
-    )
+response = client.get_ip_set(
+    Name=ip_set_name,
+    Scope='REGIONAL',
+    Id=ip_set_id
+)
 
-    addresses=response['IPSet']['Addresses']
-    LockToken=response['LockToken']
+addresses=response['IPSet']['Addresses']
+LockToken=response['LockToken']
 
-    # local_ips=addresses + local_ips
-    # local_ips=list(set(local_ips))
+# local_ips=addresses + local_ips
+# local_ips=list(set(local_ips))
 
-    response = client.update_ip_set(
-        Name=ip_set_name,
-        Scope='REGIONAL',
-        Id=ip_set_id,
-        Addresses=local_ips,
-        LockToken=LockToken
-    )
-    completed_text = "IP_SET: {} updated from {}".format(ip_set_name,text_file)
-    print(completed_text)
+response = client.update_ip_set(
+    Name=ip_set_name,
+    Scope='REGIONAL',
+    Id=ip_set_id,
+    Addresses=local_ips,
+    LockToken=LockToken
+)
+completed_text = "IP_SET: {} updated from {}".format(ip_set_name,text_file)
+print(completed_text)
