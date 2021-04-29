@@ -2,7 +2,6 @@ import boto3
 import json
 
 local_ips=[]
-local_ipset=[]
 x=[]
 
 print(x)
@@ -32,9 +31,9 @@ for single_ip in IP_LIST:
         with open('file.json') as f:
             data = json.loads(f.read())
         for key,value in data.items():
-            local_ipset.append(value)
+            local_ips.append(value)
     #get the ipset
-    else:
+    elif text_file != 'Admin-Team-IPs.json' != 'file.json':
         with open(text_file) as fp:
             c=fp.readlines()
             local_ips=[i.rstrip('\n') for i in c]
