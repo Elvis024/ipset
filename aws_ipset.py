@@ -33,7 +33,7 @@ for single_ip in IP_LIST:
         for key,value in data.items():
             local_ips.append(value)
     #get the ipset
-    elif text_file != 'Admin-Team-IPs.json':
+    else :
         with open(text_file) as fp:
             c=fp.readlines()
             local_ips=[i.rstrip('\n') for i in c]
