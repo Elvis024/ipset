@@ -2,6 +2,8 @@ import boto3
 import json
 
 local_ips=[]
+local_ipset=[]
+local_ipsets=[]
 x=[]
 
 print(x)
@@ -27,34 +29,80 @@ for single_ip in IP_LIST:
         for key,value in data.items():
             local_ips.append(value)
 
+        response = client.get_ip_set(
+            Name=ip_set_name,
+            Scope='REGIONAL',
+            Id=ip_set_id
+        )
+
+        addresses=response['IPSet']['Addresses']
+        LockToken=response['LockToken']
+
+        # local_ips=addresses + local_ips
+        # local_ips=list(set(local_ips))
+
+        response = client.update_ip_set(
+            Name=ip_set_name,
+            Scope='REGIONAL',
+            Id=ip_set_id,
+            Addresses=local_ips,
+            LockToken=LockToken
+        )
+        completed_text = "IP_SET: {} updated from {}".format(ip_set_name,text_file)
+        print(completed_text)
+
     elif text_file == 'file.json':
         with open('file.json') as f:
             data = json.loads(f.read())
         for key,value in data.items():
-            local_ips.append(value)
+            local_ipset.append(value)
+
+        response = client.get_ip_set(
+            Name=ip_set_name,
+            Scope='REGIONAL',
+            Id=ip_set_id
+        )
+
+        addresses=response['IPSet']['Addresses']
+        LockToken=response['LockToken']
+
+        # local_ips=addresses + local_ips
+        # local_ips=list(set(local_ips))
+
+        response = client.update_ip_set(
+            Name=ip_set_name,
+            Scope='REGIONAL',
+            Id=ip_set_id,
+            Addresses=local_ips,
+            LockToken=LockToken
+        )
+        completed_text = "IP_SET: {} updated from {}".format(ip_set_name,text_file)
+        print(completed_text)
+
     #get the ipset
     else :
         with open(text_file) as fp:
             c=fp.readlines()
             local_ips=[i.rstrip('\n') for i in c]
-response = client.get_ip_set(
-    Name=ip_set_name,
-    Scope='REGIONAL',
-    Id=ip_set_id
-)
 
-addresses=response['IPSet']['Addresses']
-LockToken=response['LockToken']
+        response = client.get_ip_set(
+            Name=ip_set_name,
+            Scope='REGIONAL',
+            Id=ip_set_id
+        )
 
-# local_ips=addresses + local_ips
-# local_ips=list(set(local_ips))
+        addresses=response['IPSet']['Addresses']
+        LockToken=response['LockToken']
 
-response = client.update_ip_set(
-    Name=ip_set_name,
-    Scope='REGIONAL',
-    Id=ip_set_id,
-    Addresses=local_ips,
-    LockToken=LockToken
-)
-completed_text = "IP_SET: {} updated from {}".format(ip_set_name,text_file)
-print(completed_text)
+        # local_ips=addresses + local_ips
+        # local_ips=list(set(local_ips))
+
+        response = client.update_ip_set(
+            Name=ip_set_name,
+            Scope='REGIONAL',
+            Id=ip_set_id,
+            Addresses=local_ips,
+            LockToken=LockToken
+        )
+        completed_text = "IP_SET: {} updated from {}".format(ip_set_name,text_file)
+        print(completed_text)
