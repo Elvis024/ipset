@@ -46,7 +46,7 @@ for single_ip in IP_LIST:
         print(completed_text)
 
     elif text_file == 'file.json':
-        with open('text_file') as f:
+        with open(text_file) as f:
             data = json.loads(f.read())
         for key,value in data.items():
             local_file.append(value)
