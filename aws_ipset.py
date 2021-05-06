@@ -22,7 +22,7 @@ for single_ip in IP_LIST:
     ip_set_name= single_ip['ip_set_name']
     ip_set_id = single_ip['ip_set_id']
     text_file = single_ip['text_file']
-    if text_file == 'Admin-Team-IPs.json':
+    if text_file == 'Test.json':
         with open(text_file) as f:
             data = json.loads(f.read())
         for key,value in data.items():
@@ -45,7 +45,7 @@ for single_ip in IP_LIST:
         completed_text = "IP_SET: {} updated from {}".format(ip_set_name,text_file)
         print(completed_text)
 
-    elif text_file == 'file.json':
+    elif text_file == 'Main.json':
         with open(text_file) as f:
             data = json.loads(f.read())
         for key,value in data.items():
