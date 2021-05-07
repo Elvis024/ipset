@@ -79,5 +79,5 @@ for single_ip in IP_LIST:
         waf_addips('Main.json')
 
     #get the ipset
-elif text_file == 'two.txt':
+    elif text_file == 'two.txt':
         waf_addips2('two.txt')
