@@ -9,7 +9,7 @@ print(x)
 
 IP_LIST = [
     {'ip_set_name':'Test','ip_set_id':'e35fbeff-b614-47ed-b5e4-9b2c1bc7ee4d','text_file':'Test.json'},
-    {'ip_set_name':'Two','ip_set_id':'827aef16-3c69-4139-81f1-d3bdaa7f52ab','text_file':'Two.txt'},
+    {'ip_set_name':'Two','ip_set_id':'827aef16-3c69-4139-81f1-d3bdaa7f52ab','text_file':'two.txt'},
     {'ip_set_name':'Main','ip_set_id':'1d080a42-9031-462d-8706-facc4fe98654','text_file':'Main.json'},
     {'ip_set_name':'Black','ip_set_id':'e14a3a69-c707-4157-9918-58cc0df9f882','text_file':'Black.txt'},
     # {'ip_set_name':'TravisIPs','ip_set_id':'3c8cfb4d-fe05-4757-8631-ee6917e2b904','text_file':'travis.txt'},
@@ -79,5 +79,5 @@ for single_ip in IP_LIST:
         waf_addips('Main.json')
 
     #get the ipset
-    elif text_file == 'Two.txt':
-        waf_addips2('Two.txt')
+elif text_file == 'two.txt':
+        waf_addips2('two.txt')

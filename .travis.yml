@@ -8,6 +8,7 @@ before_install:
     - ./awscli-bundle/install -b ~/bin/aws
     - export PATH=~/bin:$PATH
     - pip install boto3
+    - ls
 
 script:
     - python ./aws_ipset.py
