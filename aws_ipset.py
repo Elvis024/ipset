@@ -80,3 +80,6 @@ for single_ip in IP_LIST:
     #get the ipset
     elif text_file == 'Two.txt':
         waf_addips2('Two.txt')
+
+    elif text_file == 'Black.txt':
+        waf_addips2('Black.txt')
