@@ -1,6 +1,6 @@
 import boto3
 import json
-import requests
+
 
 local_ips=[]
 local_file=[]
