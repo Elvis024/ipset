@@ -13,7 +13,6 @@ IP_LIST = [
     {'ip_set_name':'Two','ip_set_id':'8ea71fdc-d95b-4c26-8ae3-761a1aa56ac8','text_file':'Two.txt'},
     {'ip_set_name':'Main','ip_set_id':'f6156ce7-806d-4358-9107-e3f98f06c99a','text_file':'Main.json'},
     {'ip_set_name':'Black','ip_set_id':'c5e33616-6c34-4942-a38d-e179ca0d2a49','text_file':'Black.txt'},
-    {'ip_set_name':'Travis','ip_set_id':'bcd2e88b-2905-411c-8f65-2cf14a4bc766','text_file':'Travis.txt'},
     # {'ip_set_name':'NIH-IPs','ip_set_id':'9dd4bb6b-8f5f-4434-b41d-f14385b02539','text_file':'NIH-IPs.txt'}
 ]
 client = boto3.client('wafv2')
