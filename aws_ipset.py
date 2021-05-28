@@ -1,5 +1,6 @@
 import boto3
 import json
+import requests
 
 local_ips=[]
 local_file=[]
@@ -8,15 +9,87 @@ x=[]
 print(x)
 
 IP_LIST = [
-    {'ip_set_name':'Test','ip_set_id':'e35fbeff-b614-47ed-b5e4-9b2c1bc7ee4d','text_file':'Test.json'},
-    {'ip_set_name':'Two','ip_set_id':'827aef16-3c69-4139-81f1-d3bdaa7f52ab','text_file':'Two.txt'},
-    {'ip_set_name':'Main','ip_set_id':'1d080a42-9031-462d-8706-facc4fe98654','text_file':'Main.json'},
-    {'ip_set_name':'Black','ip_set_id':'e14a3a69-c707-4157-9918-58cc0df9f882','text_file':'Black.txt'},
-    {'ip_set_name':'Travis','ip_set_id':'90f57a98-ab98-4253-aa62-0f51695f625d','text_file':'Travis.txt'},
+    {'ip_set_name':'Test','ip_set_id':'15ae6a00-24ed-45bb-881e-bb3fa8fb6251','text_file':'Test.json'},
+    {'ip_set_name':'Two','ip_set_id':'8ea71fdc-d95b-4c26-8ae3-761a1aa56ac8','text_file':'Two.txt'},
+    {'ip_set_name':'Main','ip_set_id':'f6156ce7-806d-4358-9107-e3f98f06c99a','text_file':'Main.json'},
+    {'ip_set_name':'Black','ip_set_id':'c5e33616-6c34-4942-a38d-e179ca0d2a49','text_file':'Black.txt'},
+    {'ip_set_name':'Travis','ip_set_id':'bcd2e88b-2905-411c-8f65-2cf14a4bc766','text_file':'Travis.txt'},
     # {'ip_set_name':'NIH-IPs','ip_set_id':'9dd4bb6b-8f5f-4434-b41d-f14385b02539','text_file':'NIH-IPs.txt'}
 ]
 client = boto3.client('wafv2')
+
+
+
+
+TRAVIS_AWS_DICT =  {'ip_set_name':'Travis','ip_set_id':'bcd2e88b-2905-411c-8f65-2cf14a4bc766'}
+
+#local file for storing travis IPs
+text_file = "travis_ip_list.txt"
+
+#travis IP local IP list
+travis_ips_local = []
+
+#fetch the IPs from Travis server
+TRAVIS_IP_URL = 'https://dnsjson.com/nat.macstadium-us-se-1.travisci.net/A.json'
+ip_response = requests.get(TRAVIS_IP_URL)
+travis_ip_records = ip_response.json()['results']['records']
+
+
+
+
+##Fetch the IPs in the local file
+with open(text_file) as fp:
+        c=fp.readlines()
+        travis_ips_local =[i.rstrip('\n') for i in c]
+
+
+
+"""Compare the local file with the IP addresses on travis server
+"""
+
+def update_aws():
+    client = boto3.client('wafv2')
+
+
+    ip_set_name = TRAVIS_AWS_DICT['ip_set_name']
+    ip_set_id = TRAVIS_AWS_DICT['ip_set_id']
+
+
+    #get the ipset and ipset LockToken
+    response = client.get_ip_set(
+        Name=ip_set_name,
+        Scope='REGIONAL',
+        Id=ip_set_id
+    )
+
+    #aws_addresses=response['IPSet']['Addresses']
+    LockToken=response['LockToken']
+
+    #update aws IP set
+    response = client.update_ip_set(
+        Name=ip_set_name,
+        Scope='REGIONAL',
+        Id=ip_set_id,
+        Addresses=travis_ip_records,
+        LockToken=LockToken
+    )
+    completed_text = "IP_SET: {} updated from TRAVIS server records".format(ip_set_name)
+    print(completed_text)
+
+def write_ips_to_local():
+    with open(text_file,'w') as fp:
+        for elem in travis_ip_records:
+            fp.write('{}\n'.format(elem))
+
+
+if set(travis_ip_records) != set(travis_ips_local):
+    update_aws()
+    write_ips_to_local()
+else:
+    print("The local file and travis ips match, no need to update.")
+
 def waf_addips(text_file):
+    local_ips = []
     with open(text_file) as f:
         data = json.loads(f.read())
     for key,value in data.items():
@@ -29,15 +102,20 @@ def waf_addips(text_file):
     addresses=response['IPSet']['Addresses']
     LockToken=response['LockToken']
 
-    response = client.update_ip_set(
-        Name=ip_set_name,
-        Scope='REGIONAL',
-        Id=ip_set_id,
-        Addresses=local_ips,
-        LockToken=LockToken
-    )
-    completed_text = "IP_SET: {} updated from {}".format(ip_set_name,text_file)
-    print(completed_text)
+    #check if the local ips match the aws ips
+    #if they don't match update aws
+
+    if set(addresses)!=set(local_ips):
+        response = client.update_ip_set(
+            Name=ip_set_name,
+            Scope='REGIONAL',
+            Id=ip_set_id,
+            Addresses=local_ips,
+            LockToken=LockToken
+        )
+        completed_text = "IP_SET: {} updated from {}".format(ip_set_name,text_file)
+        print(completed_text)
+
 def waf_addips2(text_file):
     with open(text_file) as fp:
         c=fp.readlines()
@@ -54,15 +132,19 @@ def waf_addips2(text_file):
     # local_ips=addresses + local_ips
     # local_ips=list(set(local_ips))
 
-    response = client.update_ip_set(
-        Name=ip_set_name,
-        Scope='REGIONAL',
-        Id=ip_set_id,
-        Addresses=local_text,
-        LockToken=LockToken
-    )
-    completed_text = "IP_SET: {} updated from {}".format(ip_set_name,text_file)
-    print(completed_text)
+
+    #check if local_text match aws addresses
+    #if they don't match, update aws
+    if set(addresses)!=set(local_text):
+        response = client.update_ip_set(
+            Name=ip_set_name,
+            Scope='REGIONAL',
+            Id=ip_set_id,
+            Addresses=local_text,
+            LockToken=LockToken
+        )
+        completed_text = "IP_SET: {} updated from {}".format(ip_set_name,text_file)
+        print(completed_text)
 
 
 for single_ip in IP_LIST:
