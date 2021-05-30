@@ -23,7 +23,7 @@ client = boto3.client('wafv2')
 TRAVIS_AWS_DICT =  {'ip_set_name':'Travis','ip_set_id':'40591226-30fc-4395-8548-b81acf5b7ad7'}
 
 #local file for storing travis IPs
-text_file = "travis_ip_list.txt"
+text_file = "Travis.txt"
 
 #travis IP local IP list
 travis_ips_local = []
