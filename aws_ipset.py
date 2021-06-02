@@ -43,7 +43,7 @@ with open(text_file) as fp:
         c=fp.readlines()
         travis_ips_local =[i.rstrip('\n') for i in c]
 
-
+# this
 
 """Compare the local file with the IP addresses on travis server
 """
