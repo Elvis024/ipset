@@ -47,7 +47,21 @@ with open(text_file) as fp:
 
 """Compare the local file with the IP addresses on travis server
 """
+client = boto3.client('wafv2')
 
+
+ip_set_name = TRAVIS_AWS_DICT['ip_set_name']
+ip_set_id = TRAVIS_AWS_DICT['ip_set_id']
+
+
+#get the ipset and ipset LockToken
+response = client.get_ip_set(
+    Name=ip_set_name,
+    Scope='REGIONAL',
+    Id=ip_set_id
+)
+
+aws_addresses=response['IPSet']['Addresses']
 def update_aws():
     client = boto3.client('wafv2')
 
@@ -63,7 +77,7 @@ def update_aws():
         Id=ip_set_id
     )
 
-    #aws_addresses=response['IPSet']['Addresses']
+    aws_addresses=response['IPSet']['Addresses']
     LockToken=response['LockToken']
 
     #update aws IP set
@@ -83,9 +97,9 @@ def write_ips_to_local():
             fp.write('{}\n'.format(elem))
 
 
-if set(list2) != set(travis_ips_local):
+if set(list2) != set(aws_addresses):
     update_aws()
-    write_ips_to_local()
+    # write_ips_to_local()
 else:
     print("The local file and travis ips match, no need to update.")
 
