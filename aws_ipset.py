@@ -32,6 +32,8 @@ travis_ips_local = []
 TRAVIS_IP_URL = 'https://dnsjson.com/nat.macstadium-us-se-1.travisci.net/A.json'
 ip_response = requests.get(TRAVIS_IP_URL)
 travis_ip_records = ip_response.json()['results']['records']
+for i in travis_ip_records:
+    print(i + "/32")
 
 
 
