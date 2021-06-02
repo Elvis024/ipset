@@ -32,9 +32,9 @@ travis_ips_local = []
 TRAVIS_IP_URL = 'https://dnsjson.com/nat.macstadium-us-se-1.travisci.net/A.json'
 ip_response = requests.get(TRAVIS_IP_URL)
 travis_ip_records = ip_response.json()['results']['records']
-for i in travis_ip_records:
-    print(i + "/32")
-
+string = '/32'
+list2 = list(map(lambda orig_string: orig_string + string, travis_ip_records))
+print(list2)
 
 
 
@@ -71,7 +71,7 @@ def update_aws():
         Name=ip_set_name,
         Scope='REGIONAL',
         Id=ip_set_id,
-        Addresses=travis_ip_records,
+        Addresses=list2,
         LockToken=LockToken
     )
     completed_text = "IP_SET: {} updated from TRAVIS server records".format(ip_set_name)
@@ -79,11 +79,11 @@ def update_aws():
 
 def write_ips_to_local():
     with open(text_file,'w') as fp:
-        for elem in travis_ip_records:
+        for elem in list2:
             fp.write('{}\n'.format(elem))
 
 
-if set(travis_ip_records) != set(travis_ips_local):
+if set(list2) != set(travis_ips_local):
     update_aws()
     write_ips_to_local()
 else:
