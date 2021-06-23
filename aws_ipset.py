@@ -63,12 +63,12 @@ response = client.get_ip_set(
 
 aws_addresses=response['IPSet']['Addresses']
 def update_aws():
-    client = boto3.client('wafv2')
-
-
-    ip_set_name = TRAVIS_AWS_DICT['ip_set_name']
-    ip_set_id = TRAVIS_AWS_DICT['ip_set_id']
-
+    # client = boto3.client('wafv2')
+    #
+    #
+    # ip_set_name = TRAVIS_AWS_DICT['ip_set_name']
+    # ip_set_id = TRAVIS_AWS_DICT['ip_set_id']
+    #
 
     #get the ipset and ipset LockToken
     response = client.get_ip_set(
@@ -91,10 +91,10 @@ def update_aws():
     completed_text = "IP_SET: {} updated from TRAVIS server records".format(ip_set_name)
     print(completed_text)
 
-def write_ips_to_local():
-    with open(text_file,'w') as fp:
-        for elem in list2:
-            fp.write('{}\n'.format(elem))
+# def write_ips_to_local():
+#     with open(text_file,'w') as fp:
+#         for elem in list2:
+#             fp.write('{}\n'.format(elem))
 
 
 if set(list2) != set(aws_addresses):
